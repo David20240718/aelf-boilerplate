@@ -9,10 +9,6 @@ Welcome to AElf Boilerplate's official GitHub repo !
 
 Boilerplate is an environment that is used to develop smart contracts and dApps. Boilerplate shares some code with AElf and internally runs an AElf node.
 
-## Getting Started
-
-You can follow the tutorials [**here**](https://aelf-boilerplate-docs.readthedocs.io/en/latest/) that will get you started with contract development on Boilerplate. This tutorial also will guide you through the needed dependencies.
-
 ## Boilerplate
 
 At the top level this repo contains two folders: **chain** and **web**. The chain folder contains code to facilitate contract development whereas the web folder contains the front end part of the dApp.
