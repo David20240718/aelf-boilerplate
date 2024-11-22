@@ -34,9 +34,6 @@
     <ContractStub Include="..\..\protobuf\bingo_game_contract.proto">
       <Link>Protobuf\Proto\bingo_game_contract.proto</Link>
     </ContractStub>
-    <ContractStub Include="..\..\protobuf\token_contract.proto">
-      <Link>Protobuf\Proto\token_contract.proto</Link>
-    </ContractStub>
   </ItemGroup>
 
   <ItemGroup>

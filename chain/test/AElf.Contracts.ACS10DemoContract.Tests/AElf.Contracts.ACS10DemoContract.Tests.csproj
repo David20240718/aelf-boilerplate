@@ -41,9 +41,6 @@
         <ContractStub Include="..\..\protobuf\acs10_demo_contract.proto">
             <Link>Protobuf\Proto\acs10_demo_contract.proto</Link>
         </ContractStub>
-        <ContractStub Include="..\..\protobuf\token_contract.proto">
-            <Link>Protobuf\Proto\token_contract.proto</Link>
-        </ContractStub>
         <ContractStub Include="..\..\protobuf\token_holder_contract.proto">
             <Link>Protobuf\Proto\token_holder_contract.proto</Link>
         </ContractStub>

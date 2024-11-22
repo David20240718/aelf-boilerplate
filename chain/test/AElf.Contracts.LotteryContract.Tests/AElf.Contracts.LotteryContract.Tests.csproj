@@ -46,9 +46,6 @@
         <ContractStub Include="..\..\protobuf\lottery_contract.proto">
             <Link>Protobuf\Proto\lottery_contract.proto</Link>
         </ContractStub>
-        <ContractStub Include="..\..\protobuf\token_contract.proto">
-            <Link>Protobuf\Proto\token_contract.proto</Link>
-        </ContractStub>
         <ContractStub Include="..\..\protobuf\parliament_contract.proto">
             <Link>Protobuf\Proto\parliament_contract.proto</Link>
         </ContractStub>

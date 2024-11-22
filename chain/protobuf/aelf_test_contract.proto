@@ -1,0 +1,246 @@
+// the version of the language, use proto3 for contracts
+syntax = "proto3";
+
+// some core imports for aelf chain types
+import "aelf/core.proto";
+import "aelf/options.proto";
+
+// import for using the google.protobuf.Empty type.
+import "google/protobuf/empty.proto";
+import "google/protobuf/wrappers.proto";
+
+import "acs12.proto";
+import "acs2.proto";
+
+// the name of the C# namespace in which the contract code will be,
+// generated code will also be in this namespace.
+option csharp_namespace = "AElfTest.Contract";
+
+// the contract definition: a gRPC service definition.
+service AElfTestContract {
+  // the full name of the C# class that will contain the state (here <namespace>.<state-class-name> format).
+  option (aelf.csharp_state) = "AElfTest.Contract.AElfTestContractState";
+  option (aelf.base) = "acs12.proto";
+  option (aelf.base) = "acs2.proto";
+  // an action defined as a gRPC service method.
+  // this action take a google.protobuf.Empty (placeholder for void) as input
+  // and returns a custom defined type: HelloReturn.
+  rpc Initialize (InitializeInput) returns (google.protobuf.Empty) {
+  }
+  rpc TestCreate (TestCreateInput) returns (google.protobuf.Empty) {
+  }
+  rpc TestRemove (google.protobuf.StringValue) returns (google.protobuf.Empty) {
+  }
+  rpc TestTransfer (TestTransferInput) returns (google.protobuf.Empty) {
+  }
+  
+  rpc TransferWithoutParallel (TestTransferInput) returns (google.protobuf.Empty) {
+  }
+  rpc AddAccount(aelf.Address) returns (google.protobuf.Empty) {
+  }
+  rpc RemoveAccount(aelf.Address) returns (google.protobuf.Empty) {
+  }
+  
+  // The TransferFrom action will transfer a specified amount of tokens from one address to another. 
+  // For this operation to succeed the from address needs to have approved (see allowances) enough tokens 
+  // to Sender of this transaction. If successful the amount will be removed from the allowance.
+  rpc TransferFrom (TransferFromInput) returns (google.protobuf.Empty) {
+  }
+  
+  // Transferring tokens simply is the action of transferring a given amount of tokens from one address to another. 
+  // The origin or source address is the signer of the transaction. 
+  // The balance of the sender must be higher than the amount that is transferred.
+  rpc Transfer (TransferInput) returns (google.protobuf.Empty) {
+  }
+
+  
+  // Check whether the token is in the whitelist of an address, 
+  // which can be called TransferFrom to transfer the token under the condition of not being credited.
+  rpc IsInWhiteList (IsInWhiteListInput) returns (google.protobuf.BoolValue) {
+      option (aelf.is_view) = true;
+  }
+
+
+  
+  rpc GetTestTokenInfo (GetTestTokenInfoInput) returns (TestTokenInfo) {
+    option (aelf.is_view) = true;
+  }
+  rpc GetTestBalance (GetTestBalanceInput) returns (TestBalance) {
+    option (aelf.is_view) = true;
+  }
+  rpc GetAccountList (google.protobuf.Empty) returns (AccountList) {
+    option (aelf.is_view) = true;
+  }
+  rpc GetLongKey (google.protobuf.StringValue) returns (google.protobuf.Int64Value) {
+    option (aelf.is_view) = true;
+  }
+}
+
+message InitializeInput {
+  aelf.Address owner = 1;
+}
+
+message TestCreateInput {
+  string symbol = 1;
+  int64 total_supply = 2;
+}
+
+message TestTransferInput {
+  aelf.Address to = 1;
+  string symbol = 2;
+  int64 amount = 3;
+  bytes memo = 4;
+}
+
+message LongKeyInput {
+  string key = 1;
+  int64 length = 2;
+}
+
+message GetTestTokenInfoInput {
+  string symbol = 1;
+}
+
+message GetTestBalanceInput {
+  string symbol = 1;
+  aelf.Address owner = 2;
+}
+
+message TestTokenInfo {
+  string symbol = 1;
+  int64 total_supply = 2;
+  aelf.Address issuer = 3;
+}
+
+message TestBalance {
+  string symbol = 1;
+  aelf.Address owner = 2;
+  int64 amount = 3;
+}
+
+message AccountList {
+  repeated aelf.Address account = 1;
+}
+
+message TestTransferred {
+  option (aelf.is_event) = true;
+  aelf.Address from = 1 [(aelf.is_indexed) = true];
+  aelf.Address to = 2 [(aelf.is_indexed) = true];
+  string symbol = 3 [(aelf.is_indexed) = true];
+  int64 amount = 4;
+  bytes memo = 5;
+}
+
+message TestTokenCreated {
+  option (aelf.is_event) = true;
+  string symbol = 1;
+  int64 total_supply = 2;
+}
+
+message TestTokenRemoved {
+  option (aelf.is_event) = true;
+  string symbol = 1;
+}
+
+
+message AccountAdded{
+  option (aelf.is_event) = true;
+  aelf.Address account = 1;
+}
+
+message AccountRemoved{
+  option (aelf.is_event) = true;
+  aelf.Address account = 1;
+}
+
+message TransferFromInput {
+    // The source address of the token.
+    aelf.Address from = 1;
+    // The destination address of the token.
+    aelf.Address to = 2;
+    // The symbol of the token to transfer.
+    string symbol = 3;
+    // The amount to transfer.
+    int64 amount = 4;
+    // The memo.
+    string memo = 5;
+}
+
+message TokenInfo {
+    // The symbol of the token.f
+    string symbol = 1;
+    // The full name of the token.
+    string token_name = 2;
+    // The current supply of the token.
+    int64 supply = 3;
+    // The total supply of the token.
+    int64 total_supply = 4;
+    // The precision of the token.
+    int32 decimals = 5;
+    // The address that has permission to issue the token.
+    aelf.Address issuer = 6;
+    // A flag indicating if this token is burnable.
+    bool is_burnable = 7;
+    // The chain id of the token.
+    int32 issue_chain_id = 8;
+    // The amount of issued tokens.
+    int64 issued = 9;
+    // The external information of the token.
+    ExternalInfo external_info = 10;
+    // The address that owns the token.
+    aelf.Address owner = 11;
+}
+
+
+message ExternalInfo {
+    map<string, string> value = 1;
+}
+
+
+message IsInWhiteListInput {
+    // The symbol of token. 
+    string symbol = 1;
+    // The address to check.
+    aelf.Address address = 2;
+}
+
+message CallbackInfo {
+    aelf.Address contract_address = 1;
+    string method_name = 2;
+}
+
+enum SymbolType {
+    TOKEN = 0;
+    NFT = 1;
+    NFT_COLLECTION = 2;
+}
+
+message Transferred {
+    option (aelf.is_event) = true;
+    // The source address of the transferred token.
+    aelf.Address from = 1 [(aelf.is_indexed) = true];
+    // The destination address of the transferred token.
+    aelf.Address to = 2 [(aelf.is_indexed) = true];
+    // The symbol of the transferred token.
+    string symbol = 3 [(aelf.is_indexed) = true];
+    // The amount of the transferred token.
+    int64 amount = 4;
+    // The memo.
+    string memo = 5;
+}
+
+message TransferInput {
+    // The receiver of the token.
+    aelf.Address to = 1;
+    // The token symbol to transfer.
+    string symbol = 2;
+    // The amount to to transfer.
+    int64 amount = 3;
+    // The memo.
+    string memo = 4;
+}
+
+
+
+
+
