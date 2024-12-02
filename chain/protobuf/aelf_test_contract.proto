@@ -52,6 +52,11 @@ service AElfTestContract {
   // The balance of the sender must be higher than the amount that is transferred.
   rpc Transfer (TransferInput) returns (google.protobuf.Empty) {
   }
+  
+  // The approve action increases the allowance from the Sender to the Spender address, 
+  // enabling the Spender to call TransferFrom.
+  rpc Approve (ApproveInput) returns (google.protobuf.Empty) {
+  }
 
   
   // Check whether the token is in the whitelist of an address, 
@@ -238,6 +243,27 @@ message TransferInput {
     int64 amount = 3;
     // The memo.
     string memo = 4;
+}
+
+message ApproveInput {
+    // The address that allowance will be increased. 
+    aelf.Address spender = 1;
+    // The symbol of token to approve.
+    string symbol = 2;
+    // The amount of token to approve.
+    int64 amount = 3;
+}
+
+message Approved {
+    option (aelf.is_event) = true;
+    // The address of the token owner.
+    aelf.Address owner = 1 [(aelf.is_indexed) = true];
+    // The address that allowance be increased. 
+    aelf.Address spender = 2 [(aelf.is_indexed) = true];
+    // The symbol of approved token.
+    string symbol = 3 [(aelf.is_indexed) = true];
+    // The amount of approved token.
+    int64 amount = 4;
 }
 
 

@@ -14,26 +14,26 @@ public partial class AElfTestContract
         AssertValidInputAddress(to);
         
         // First check allowance.
-        var allowance = GetAllowance(from, spender, symbol, amount, out var allowanceSymbol);
-        if (allowance < amount)
-        {
-            if (IsInWhiteList(new IsInWhiteListInput { Symbol = symbol, Address = spender }).Value)
-            {
-                DoTransfer(from, to, symbol, amount, memo);
-                DealWithExternalInfoDuringTransfer(new TransferFromInput()
-                    { From = from, To = to, Symbol = symbol, Amount = amount, Memo = memo });
-                return;
-            }
-
-            Assert(false,
-                $"[TransferFrom]Insufficient allowance. Token: {symbol}; {allowance}/{amount}.\n" +
-                $"From:{from}\tSpender:{spender}\tTo:{to}");
-        }
+        // var allowance = GetAllowance(from, spender, symbol, amount, out var allowanceSymbol);
+        // if (allowance < amount)
+        // {
+        //     if (IsInWhiteList(new IsInWhiteListInput { Symbol = symbol, Address = spender }).Value)
+        //     {
+        //         DoTransfer(from, to, symbol, amount, memo);
+        //         DealWithExternalInfoDuringTransfer(new TransferFromInput()
+        //             { From = from, To = to, Symbol = symbol, Amount = amount, Memo = memo });
+        //         return;
+        //     }
+        //
+        //     Assert(false,
+        //         $"[TransferFrom]Insufficient allowance. Token: {symbol}; {allowance}/{amount}.\n" +
+        //         $"From:{from}\tSpender:{spender}\tTo:{to}");
+        // }
 
         DoTransfer(from, to, symbol, amount, memo);
         DealWithExternalInfoDuringTransfer(new TransferFromInput()
             { From = from, To = to, Symbol = symbol, Amount = amount, Memo = memo });
-        State.Allowances[from][spender][allowanceSymbol] = allowance.Sub(amount);
+        // State.Allowances[from][spender][allowanceSymbol] = allowance.Sub(amount);
     }
     
     private long GetAllowance(Address from, Address spender, string sourceSymbol, long amount,

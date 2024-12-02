@@ -24,6 +24,7 @@ public partial class AElfTestContractState : ContractState
     public MappedState<string, string> SymbolAliasMap { get; set; }
 
     public MappedState<Address, string, long> BalanceMap { get; set; }
+    public MappedState<Address, string, long> Balances { get; set; }
     // public MappedState<string, MethodCallingThreshold> MethodCallingThresholds { get; set; }
     public SingletonState<AccountList> AccountList { get; set; } 
     

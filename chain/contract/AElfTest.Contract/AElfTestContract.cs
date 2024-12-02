@@ -50,8 +50,25 @@ namespace AElfTest.Contract
                 Symbol = tokenInfo.Symbol,
                 TotalSupply = tokenInfo.TotalSupply,
             });
+            
+            var tokenInfo2 = new TokenInfo
+            {
+                Symbol = input.Symbol,
+                TokenName = input.Symbol,
+                TotalSupply = input.TotalSupply,
+                Decimals = 8,
+                Issuer = Context.Sender,
+                IsBurnable = true,
+                IssueChainId = Context.ChainId,
+                ExternalInfo = new ExternalInfo(),
+                Owner = Context.Sender,
+            };
+            
+            State.TokenInfos[input.Symbol] = tokenInfo2;
+            State.Balances[Context.Sender][input.Symbol] = input.TotalSupply;
             return new Empty();
         }
+        
 
         /// <summary>
         /// Removes the token information associated with the given symbol from the state.
@@ -216,6 +233,28 @@ namespace AElfTest.Contract
                 Symbol = symbol,
                 Amount = amount,
                 Memo = memo ?? ByteString.Empty
+            });
+        }
+        
+        public override Empty Approve(ApproveInput input)
+        {
+            AssertValidInputAddress(input.Spender);
+            var actualSymbol = GetActualTokenSymbol(input.Symbol);
+            AssertValidApproveTokenAndAmount(actualSymbol, input.Amount);
+            Approve(input.Spender, actualSymbol, input.Amount);
+            return new Empty();
+        }
+
+        private void Approve(Address spender, string symbol, long amount)
+        {
+            var actualSymbol = GetActualTokenSymbol(symbol);
+            State.Allowances[Context.Sender][spender][actualSymbol] = amount;
+            Context.Fire(new Approved
+            {
+                Owner = Context.Sender,
+                Spender = spender,
+                Symbol = actualSymbol,
+                Amount = amount
             });
         }
         

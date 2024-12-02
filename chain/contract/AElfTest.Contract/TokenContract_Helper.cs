@@ -50,4 +50,44 @@ public partial class AElfTestContract
                 NonIndexed = input.ToByteString()
             });
     }
+    
+    private void AssertValidApproveTokenAndAmount(string symbol, long amount)
+    {
+        Assert(amount > 0, "Invalid amount.");
+        AssertApproveToken(symbol);
+    }
+    
+    private void AssertApproveToken(string symbol)
+    {
+        Assert(!string.IsNullOrEmpty(symbol), "Symbol can not be null.");
+        var words = symbol.Split(AElfTestTokenContractConstants.NFTSymbolSeparator);
+        var symbolPrefix = words[0];
+        var allSymbolIdentifier = GetAllSymbolIdentifier();
+        Assert(symbolPrefix.Length > 0 && (IsValidCreateSymbol(symbolPrefix) || symbolPrefix.Equals(allSymbolIdentifier)), "Invalid symbol.");
+        if (words.Length == 1)
+        {
+            if (!symbolPrefix.Equals(allSymbolIdentifier))
+            {
+                ValidTokenExists(symbolPrefix);
+            }
+            return;
+        }
+        Assert(words.Length == 2, "Invalid symbol length.");
+        var itemId = words[1];
+        Assert(itemId.Length > 0 && (IsValidItemId(itemId) || itemId.Equals(allSymbolIdentifier)), "Invalid NFT Symbol.");
+        var nftSymbol = itemId.Equals(allSymbolIdentifier) ? GetCollectionSymbol(symbolPrefix) : symbol;
+        ValidTokenExists(nftSymbol);
+    }
+    
+    private void ValidTokenExists(string symbol)
+    {
+        var tokenInfo = State.TokenInfos[symbol];
+        Assert(tokenInfo != null && !string.IsNullOrEmpty(tokenInfo.Symbol),
+            $"Token is not found. {symbol}");
+    }
+    
+    private string GetCollectionSymbol(string symbolPrefix)
+    {
+        return $"{symbolPrefix}-{AElfTestTokenContractConstants.CollectionSymbolSuffix}";
+    }
 }
